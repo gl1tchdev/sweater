@@ -2,10 +2,7 @@ package com.example.sweater.domain;
 
 import lombok.*;
 
-import javax.persistence.Entity;
-import javax.persistence.GeneratedValue;
-import javax.persistence.GenerationType;
-import javax.persistence.Id;
+import javax.persistence.*;
 
 @Entity
 @NoArgsConstructor
@@ -19,4 +16,11 @@ public class Message {
     private Integer id;
     @NonNull private String text;
     @NonNull private String tag;
+    @ManyToOne(fetch = FetchType.EAGER)
+    @JoinColumn(name = "author_id")
+    @NonNull private User author;
+
+    public String getAuthorName() {
+        return author.getUsername();
+    }
 }
