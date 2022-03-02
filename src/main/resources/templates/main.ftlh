@@ -25,4 +25,5 @@
     No messages
     </#list>
 <div><@l.logout/></div>
+<span><a href="/user">Userlist</a></span>
 </@c.page>
