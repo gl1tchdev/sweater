@@ -16,16 +16,28 @@ import java.util.stream.Collectors;
 
 @Controller
 @RequestMapping("/user")
-@PreAuthorize("hasAuthority(`ADMIN`)")
+@PreAuthorize("hasAuthority('ADMIN')")
 public class UserController {
     @Autowired
     private UserRepo userRepo;
 
+    /** Shows the list of registered users
+     *
+     * @param model The Model object is a Map that is used to pass information between the controller and the view.
+     * @return A String.
+     */
     @GetMapping
     public String userList(Model model){
         model.addAttribute("users", userRepo.findAll());
        return "userList";
     }
+    /**
+     * This function is used to display the user edit form
+     *
+     * @param user The user to be edited.
+     * @param model The Model object is a Map that is used to pass information to the view.
+     * @return The userEdit.ftlh page.
+     */
     @GetMapping("{user}")
     private String userEditForm(@PathVariable User user, Model model){
         model.addAttribute("user", user);
@@ -34,6 +46,14 @@ public class UserController {
         return "userEdit";
     }
 
+    /**
+     * It saves the user to the database.
+     *
+     * @param username The username of the user.
+     * @param user The user object that is being saved.
+     * @param form A map of the form data.
+     * @return The user is being returned.
+     */
     @PostMapping
     private String userSave(
             @RequestParam String username,
@@ -47,7 +67,7 @@ public class UserController {
                 .collect(Collectors.toSet());
         form.keySet().forEach(i -> {
             if (roles.contains(i)){
-                user.getRoles().add(Role.valueOf(i)  );
+                user.getRoles().add(Role.valueOf(i));
             }
         });
         userRepo.save(user);

@@ -19,6 +19,7 @@ public class Message {
     @ManyToOne(fetch = FetchType.EAGER)
     @JoinColumn(name = "author_id")
     @NonNull private User author;
+    private String filename;
 
     public String getAuthorName() {
         return author.getUsername();
