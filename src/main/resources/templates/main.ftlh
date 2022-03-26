@@ -6,7 +6,7 @@
     <div class="col-12">
         <div class="input-group">
             <span class="input-group-text" id="basic-addon1">#</span>
-            <input type="text" name="filter" class="form-control" aria-describedby="basic-addon1" placeholder="Search by tag" value="${message?ifExists}">
+            <input type="text" name="filter" class="form-control" aria-describedby="basic-addon1" placeholder="Search by tag" value="${(message.text)!''}">
         </div>
     </div>
     <div class="col-12">
@@ -19,14 +19,32 @@
     </div>
 </form>
 
-<form method="post" class="collapse row row-cols-lg-auto mt-3 g-4 align-items-center" id="collapseExample" enctype="multipart/form-data">
+<form method="post" class="collapse row row-cols-lg-auto mt-3 g-4 align-items-center<#if textError??> show<#elseif tagError??> show</#if>" id="collapseExample" enctype="multipart/form-data">
     <div class="col-12">
-        <input type="text" class="form-control" name="text" placeholder="Some text">
+        <input type="text" class="form-control${(textError??)?string(' is-invalid', '')}"
+               <#if message??>
+               value="${message.text}"
+               </#if>
+               name="text" placeholder="Some text">
+        <#if textError??>
+        <div class="invalid-feedback">
+            ${textError}
+        </div>
+        </#if>
     </div>
     <div class="col-12">
         <div class="input-group">
             <span class="input-group-text" id="basic-addon1">#</span>
-            <input type="text" name="tag" class="form-control" aria-describedby="basic-addon1" placeholder="Some tag" >
+            <input type="text" name="tag" class="form-control${(tagError??)?string(' is-invalid', '')}" aria-describedby="basic-addon1"
+                    <#if message??>
+                        value="${message.tag}"
+                    </#if>
+                   placeholder="Some tag" >
+            <#if tagError??>
+                <div class="invalid-feedback">
+                    ${tagError}
+                </div>
+            </#if>
         </div>
     </div>
     <div class="col-12">
@@ -40,20 +58,20 @@
  <div class="row" data-masonry='{"percentPosition": true }'>
     <#list messages as message>
         <div class="col-sm-4 col-md-3 py-3">
-        <div class="card border-primary">
-            <#if message.filename??>
-                <img class="card-img-top" src="/img/${message.filename}" alt=""/>
-            </#if>
-            <div class="card-body">
-                <div class="card-text m-2">
-                    <span>${message.text}</span>
-                    <i>#${message.tag}</i>
+            <div class="card border-primary">
+                <#if message.filename??>
+                    <img class="card-img-top" src="/img/${message.filename}" alt=""/>
+                </#if>
+                <div class="card-body">
+                    <div class="card-text m-2">
+                        <span>${message.text}</span>
+                        <i>#${message.tag}</i>
+                    </div>
+                </div>
+                <div class="card-footer text-muted">
+                    ${message.authorName}
                 </div>
             </div>
-            <div class="card-footer text-muted">
-                ${message.authorName}
-            </div>
-        </div>
         </div>
         <#else>
         No messages
